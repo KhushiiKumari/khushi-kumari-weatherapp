@@ -20,9 +20,11 @@ window.addEventListener('load', () => {
     getWeather('Delhi');
 });
 
-async function getWeather(city = 'Delhi') {
+async function getWeather(inputCity = 'Delhi') {
+    const city = cityInput.value.trim() || inputCity;
+    if (!city) return;
+    
     try {
-        // Show loading
         showLoading();
         
         // Current weather
@@ -49,10 +51,9 @@ function displayWeather(data) {
     const { name, main, weather, wind, visibility } = data;
     const { temp, feels_like, humidity } = main;
     const { description, icon } = weather[0];
-    const windSpeed = wind.speed * 3.6; // m/s to km/h
+    const windSpeed = wind.speed * 3.6;
     const visibilityKm = (visibility / 1000).toFixed(1);
     
-    // Update DOM
     document.getElementById('temperature').textContent = `${Math.round(temp)}°C`;
     document.getElementById('description').textContent = description;
     document.getElementById('cityName').textContent = name;
@@ -62,7 +63,6 @@ function displayWeather(data) {
     document.getElementById('windSpeed').textContent = windSpeed.toFixed(1);
     document.getElementById('visibility').textContent = visibilityKm;
     
-    // Weather icon
     const iconEl = document.getElementById('weatherIcon');
     iconEl.className = 'fas weather-icon';
     setWeatherIcon(iconEl, icon);
@@ -141,12 +141,4 @@ function showError(message) {
         </div>
     `;
     forecast.innerHTML = '';
-}
-
-function getWeather(cityName) {
-    const city = cityInput.value.trim() || cityName;
-    if (city) {
-        cityInput.value = city;
-        getWeather(city);
-    }
 }
